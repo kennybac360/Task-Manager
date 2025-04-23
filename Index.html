@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f4f4f4;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    #taskForm {
+      display: flex;
+      flex-direction: column;
+      max-width: 300px;
+      margin: 0 auto 20px auto;
+    }
+
+    #taskForm input,
+    #taskForm button {
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    #taskmanager {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .task {
+      padding: 10px;
+      background: #fff;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .important {
+      color: red;
+    }
+
+    .completed {
+      text-decoration: line-through;
+    }
+  </style>
+</head>
+<body>
+  <h1>Task Manager</h1>
+
+  <form id="taskForm">
+    <input type="text" id="taskName" placeholder="Task name" required>
+    <button type="submit">Add Task</button>
+  </form>
+
+  <div id="taskmanager"></div>
+
+  <script>
+    const taskForm = document.getElementById("taskForm");
+    const taskManager = document.getElementById("taskmanager");
+    let tasks = [];
+    let taskId = 1;
+
+    taskForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("taskName").value.trim();
+      if (name === "") return;
+
+      const task = {
+        id: taskId++,
+        name,
+        isCompleted: false,
+        date: new Date().toLocaleString()
+      };
+
+      tasks.push(task);
+      renderTasks();
+      taskForm.reset();
+      console.log(JSON.stringify(tasks));
+    });
+
+    function renderTasks() {
+      taskManager.innerHTML = "";
+      tasks.forEach(task => {
+        const taskDiv = document.createElement("div");
+        taskDiv.className = "task";
+
+        const taskText = document.createElement("span");
+        taskText.textContent = `${task.name} - ${task.date}`;
+        if (task.isCompleted) taskText.classList.add("completed");
+
+        const completeBtn = document.createElement("button");
+        completeBtn.textContent = task.isCompleted ? "Undo" : "Complete";
+        completeBtn.onclick = () => {
+          task.isCompleted = !task.isCompleted;
+          renderTasks();
+          console.log(JSON.stringify(tasks));
+        };
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.onclick = () => {
+          tasks = tasks.filter(t => t.id !== task.id);
+          renderTasks();
+          console.log(JSON.stringify(tasks));
+        };
+
+        taskDiv.appendChild(taskText);
+        taskDiv.appendChild(document.createElement("br"));
+        taskDiv.appendChild(completeBtn);
+        taskDiv.appendChild(deleteBtn);
+        taskManager.appendChild(taskDiv);
+      });
+    }
+  </script>
+</body>
+</html>
