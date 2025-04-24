@@ -1,65 +1,90 @@
+const taskForm = document.getElementById('taskForm');
+const taskManager = document.getElementById('taskmanager');
+
 let tasks = [];
+let taskId = 0;
 
-const form = document.getElementById("taskForm");
-const taskNameInput = document.getElementById("taskName");
-const taskPriority = document.getElementById("taskPriority");
-const taskImportant = document.getElementById("taskImportant");
-const taskContainer = document.getElementById("taskmanager");
-
-form.addEventListener("submit", function (e) {
+taskForm.addEventListener('submit', function (e) {
   e.preventDefault();
 
-  const name = taskNameInput.value.trim();
-  const priority = taskPriority.value;
-  const isImportant = taskImportant.checked;
+  const taskName = document.getElementById('taskName').value.trim();
+  const priority = document.getElementById('priority').value;
+  const isImportant = document.getElementById('important').checked;
+  const dateAdded = new Date().toLocaleString();
 
-  if (!name) return;
+  if (taskName === "") {
+    alert("Task name cannot be empty!");
+    return;
+  }
 
   const task = {
-    id: Date.now(),
-    name,
-    priority,
-    isImportant,
+    id: taskId++,
+    name: taskName,
+    priority: priority,
+    isImportant: isImportant,
     isCompleted: false,
-    date: new Date().toLocaleString()
+    date: dateAdded
   };
 
   tasks.push(task);
-  console.log(JSON.stringify(tasks));
+  logTasks();
   renderTasks();
-  form.reset();
+  taskForm.reset();
 });
 
 function renderTasks() {
-  taskContainer.innerHTML = "";
+  taskManager.innerHTML = "";
 
   tasks.forEach(task => {
-    const taskDiv = document.createElement("div");
-    taskDiv.classList.add("task");
+    const taskDiv = document.createElement('div');
+    taskDiv.classList.add('task');
 
-    if (task.isImportant) taskDiv.classList.add("important");
-    if (task.isCompleted) taskDiv.classList.add("completed");
+    if (task.isImportant) taskDiv.classList.add('important');
+    if (task.isCompleted) taskDiv.classList.add('completed');
 
-    taskDiv.innerHTML = `
-      <p><strong>${task.name}</strong> [${task.priority}]<br>
-      Added: ${task.date}</p>
-      <button onclick="toggleComplete(${task.id})">Toggle Complete</button>
-      <button onclick="deleteTask(${task.id})">Delete</button>
-    `;
+    // Task Info Section
+    const infoDiv = document.createElement('div');
+    infoDiv.classList.add('task-info');
 
-    taskContainer.appendChild(taskDiv);
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = task.name;
+
+    const metaSpan = document.createElement('span');
+    metaSpan.classList.add('task-meta');
+    metaSpan.textContent = `Priority: ${task.priority} | Added: ${task.date}`;
+
+    infoDiv.appendChild(nameSpan);
+    infoDiv.appendChild(metaSpan);
+
+    // Action Buttons
+    const btnDiv = document.createElement('div');
+
+    const completeBtn = document.createElement('button');
+    completeBtn.textContent = task.isCompleted ? "Undo" : "Complete";
+    completeBtn.addEventListener('click', () => {
+      task.isCompleted = !task.isCompleted;
+      logTasks();
+      renderTasks();
+    });
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = "Delete";
+    deleteBtn.addEventListener('click', () => {
+      tasks = tasks.filter(t => t.id !== task.id);
+      logTasks();
+      renderTasks();
+    });
+
+    btnDiv.appendChild(completeBtn);
+    btnDiv.appendChild(deleteBtn);
+
+    taskDiv.appendChild(infoDiv);
+    taskDiv.appendChild(btnDiv);
+
+    taskManager.appendChild(taskDiv);
   });
 }
 
-function toggleComplete(id) {
-  const task = tasks.find(t => t.id === id);
-  task.isCompleted = !task.isCompleted;
-  console.log(JSON.stringify(tasks));
-  renderTasks();
-}
-
-function deleteTask(id) {
-  tasks = tasks.filter(t => t.id !== id);
-  console.log(JSON.stringify(tasks));
-  renderTasks();
+function logTasks() {
+  console.log(JSON.stringify(tasks, null, 2));
 }
