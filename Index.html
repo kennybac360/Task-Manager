@@ -9,22 +9,24 @@
 <body>
   <h1>Task Manager</h1>
 
-  <form id="taskForm">
-    <input type="text" id="taskName" placeholder="Enter task name" required />
+<form id="taskForm">
+  <div class="form-row">
+    <input type="text" id="taskName" placeholder="Task Name" required />
     
     <select id="taskPriority">
       <option value="High">High</option>
       <option value="Medium" selected>Medium</option>
       <option value="Low">Low</option>
     </select>
-
+    
     <label>
       <input type="checkbox" id="taskImportant" />
       Important
     </label>
 
     <button type="submit">Add Task</button>
-  </form>
+  </div>
+</form>
 
   <div id="taskmanager"></div>
 
