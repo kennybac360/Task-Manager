@@ -22,7 +22,8 @@ button {
 }
 
 .important {
-  color: red;
+  background-color: red;
+  color: white;
 }
 
 .completed {
