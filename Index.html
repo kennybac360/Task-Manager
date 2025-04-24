@@ -7,28 +7,33 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Task Manager</h1>
 
-<form id="taskForm">
-  <div class="form-row">
-    <input type="text" id="taskName" placeholder="Task Name" required />
-    
-    <select id="taskPriority">
-      <option value="High">High</option>
-      <option value="Medium" selected>Medium</option>
-      <option value="Low">Low</option>
-    </select>
-    
-    <label>
-      <input type="checkbox" id="taskImportant" />
-      Important
-    </label>
+  <div class="container">
+    <h1>Task Manager</h1>
 
-    <button type="submit">Add Task</button>
+    <form id="taskForm">
+      <div class="form-row">
+        <input type="text" id="taskName" placeholder="Task Name" required />
+
+        <select id="priority">
+          <option value="High">High</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="Low">Low</option>
+        </select>
+
+        <label>
+          <input type="checkbox" id="important" />
+          Important
+        </label>
+
+        <button type="submit">Add Task</button>
+      </div>
+    </form>
+
+    <hr />
+
+    <div id="taskmanager"></div>
   </div>
-</form>
-
-  <div id="taskmanager"></div>
 
   <script src="script.js"></script>
 </body>
