@@ -1,14 +1,22 @@
+// Task array
 let tasks = [];
 
-document.getElementById('addTask').addEventListener('click', function () {
-  const name = document.getElementById('taskName').value.trim();
-  const priority = document.getElementById('taskPriority').value;
-  const isImportant = document.getElementById('isImportant').checked;
+// DOM elements
+const form = document.getElementById("taskForm");
+const taskNameInput = document.getElementById("taskName");
+const taskPriority = document.getElementById("taskPriority");
+const taskImportant = document.getElementById("taskImportant");
+const taskContainer = document.getElementById("taskmanager");
 
-  if (!name) {
-    alert('Please enter a task name.');
-    return;
-  }
+// Handle form submit
+form.addEventListener("submit", function (e) {
+  e.preventDefault(); // Stop the page from refreshing
+
+  const name = taskNameInput.value.trim();
+  const priority = taskPriority.value;
+  const isImportant = taskImportant.checked;
+
+  if (!name) return; // Prevent adding empty tasks
 
   const task = {
     id: Date.now(),
@@ -16,47 +24,54 @@ document.getElementById('addTask').addEventListener('click', function () {
     priority,
     isImportant,
     isCompleted: false,
-    date: new Date().toLocaleDateString()
+    date: new Date().toLocaleString(),
   };
 
   tasks.push(task);
-  displayTasks();
-  console.log(JSON.stringify(tasks));
-  document.getElementById('taskName').value = '';
-  document.getElementById('isImportant').checked = false;
+  console.log(JSON.stringify(tasks)); // Log task list
+
+  renderTasks();
+  form.reset(); // Clear the form
 });
 
-function displayTasks() {
-  const taskDiv = document.getElementById('taskmanager');
-  taskDiv.innerHTML = '';
+// Render tasks
+function renderTasks() {
+  taskContainer.innerHTML = ""; // Clear old tasks
 
-  tasks.forEach(task => {
-    const div = document.createElement('div');
-    div.className = 'task';
-    if (task.isImportant) div.classList.add('important');
-    if (task.isCompleted) div.classList.add('completed');
+  tasks.forEach((task) => {
+    const taskDiv = document.createElement("div");
+    taskDiv.classList.add("task");
 
-    div.innerHTML = `
-      <strong>${task.name}</strong> <br>
-      Priority: ${task.priority} <br>
-      Date Added: ${task.date} <br>
+    // Apply styles
+    if (task.isImportant) {
+      taskDiv.style.color = "red";
+    }
+
+    if (task.isCompleted) {
+      taskDiv.style.textDecoration = "line-through";
+    }
+
+    taskDiv.innerHTML = `
+      <p><strong>${task.name}</strong> [${task.priority}] - Added: ${task.date}</p>
       <button onclick="toggleComplete(${task.id})">Toggle Complete</button>
       <button onclick="deleteTask(${task.id})">Delete</button>
     `;
 
-    taskDiv.appendChild(div);
+    taskContainer.appendChild(taskDiv);
   });
 }
 
+// Toggle complete
 function toggleComplete(id) {
-  const task = tasks.find(t => t.id === id);
+  const task = tasks.find((t) => t.id === id);
   task.isCompleted = !task.isCompleted;
-  displayTasks();
   console.log(JSON.stringify(tasks));
+  renderTasks();
 }
 
+// Delete task
 function deleteTask(id) {
-  tasks = tasks.filter(t => t.id !== id);
-  displayTasks();
+  tasks = tasks.filter((t) => t.id !== id);
   console.log(JSON.stringify(tasks));
+  renderTasks();
 }
