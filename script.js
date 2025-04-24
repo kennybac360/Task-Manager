@@ -1,14 +1,19 @@
 let tasks = [];
 
-document.getElementById('addTask').addEventListener('click', function () {
-  const name = document.getElementById('taskName').value.trim();
-  const priority = document.getElementById('taskPriority').value;
-  const isImportant = document.getElementById('isImportant').checked;
+const form = document.getElementById("taskForm");
+const taskNameInput = document.getElementById("taskName");
+const taskPriority = document.getElementById("taskPriority");
+const taskImportant = document.getElementById("taskImportant");
+const taskContainer = document.getElementById("taskmanager");
 
-  if (!name) {
-    alert('Please enter a task name.');
-    return;
-  }
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const name = taskNameInput.value.trim();
+  const priority = taskPriority.value;
+  const isImportant = taskImportant.checked;
+
+  if (!name) return;
 
   const task = {
     id: Date.now(),
@@ -16,47 +21,45 @@ document.getElementById('addTask').addEventListener('click', function () {
     priority,
     isImportant,
     isCompleted: false,
-    date: new Date().toLocaleDateString()
+    date: new Date().toLocaleString()
   };
 
   tasks.push(task);
-  displayTasks();
   console.log(JSON.stringify(tasks));
-  document.getElementById('taskName').value = '';
-  document.getElementById('isImportant').checked = false;
+  renderTasks();
+  form.reset();
 });
 
-function displayTasks() {
-  const taskDiv = document.getElementById('taskmanager');
-  taskDiv.innerHTML = '';
+function renderTasks() {
+  taskContainer.innerHTML = "";
 
   tasks.forEach(task => {
-    const div = document.createElement('div');
-    div.className = 'task';
-    if (task.isImportant) div.classList.add('important');
-    if (task.isCompleted) div.classList.add('completed');
+    const taskDiv = document.createElement("div");
+    taskDiv.classList.add("task");
 
-    div.innerHTML = `
-      <strong>${task.name}</strong> <br>
-      Priority: ${task.priority} <br>
-      Date Added: ${task.date} <br>
+    if (task.isImportant) taskDiv.classList.add("important");
+    if (task.isCompleted) taskDiv.classList.add("completed");
+
+    taskDiv.innerHTML = `
+      <p><strong>${task.name}</strong> [${task.priority}]<br>
+      Added: ${task.date}</p>
       <button onclick="toggleComplete(${task.id})">Toggle Complete</button>
       <button onclick="deleteTask(${task.id})">Delete</button>
     `;
 
-    taskDiv.appendChild(div);
+    taskContainer.appendChild(taskDiv);
   });
 }
 
 function toggleComplete(id) {
   const task = tasks.find(t => t.id === id);
   task.isCompleted = !task.isCompleted;
-  displayTasks();
   console.log(JSON.stringify(tasks));
+  renderTasks();
 }
 
 function deleteTask(id) {
   tasks = tasks.filter(t => t.id !== id);
-  displayTasks();
   console.log(JSON.stringify(tasks));
+  renderTasks();
 }
