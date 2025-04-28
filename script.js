@@ -42,7 +42,7 @@ function renderTasks() {
     if (task.isImportant) taskDiv.classList.add('important');
     if (task.isCompleted) taskDiv.classList.add('completed');
 
-    // Task Info
+    // Task Info Section
     const infoDiv = document.createElement('div');
     infoDiv.classList.add('task-info');
 
@@ -56,24 +56,17 @@ function renderTasks() {
     infoDiv.appendChild(nameSpan);
     infoDiv.appendChild(metaSpan);
 
-    // Actions
+    // Action Buttons
     const btnDiv = document.createElement('div');
 
-    // Done Checkbox
-    const doneLabel = document.createElement('label');
-    const doneCheckbox = document.createElement('input');
-    doneCheckbox.type = "checkbox";
-    doneCheckbox.checked = task.isCompleted;
-    doneCheckbox.addEventListener('change', () => {
-      task.isCompleted = doneCheckbox.checked;
+    const completeBtn = document.createElement('button');
+    completeBtn.textContent = task.isCompleted ? "Undo" : "Complete";
+    completeBtn.addEventListener('click', () => {
+      task.isCompleted = !task.isCompleted;
       logTasks();
       renderTasks();
     });
 
-    doneLabel.appendChild(doneCheckbox);
-    doneLabel.appendChild(document.createTextNode(task.isCompleted ? " Undo" : " Done"));
-
-    // Delete Button
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = "Delete";
     deleteBtn.addEventListener('click', () => {
@@ -82,7 +75,7 @@ function renderTasks() {
       renderTasks();
     });
 
-    btnDiv.appendChild(doneLabel);
+    btnDiv.appendChild(completeBtn);
     btnDiv.appendChild(deleteBtn);
 
     taskDiv.appendChild(infoDiv);
@@ -90,4 +83,8 @@ function renderTasks() {
 
     taskManager.appendChild(taskDiv);
   });
+}
+
+function logTasks() {
+  console.log(JSON.stringify(tasks, null, 2));
 }
