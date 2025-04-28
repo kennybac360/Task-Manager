@@ -13,13 +13,11 @@ body {
   text-align: center;
 }
 
-/* Title Styling */
 h1 {
   font-size: 2.5em;
   margin-bottom: 20px;
 }
 
-/* Form Row Layout */
 .form-row {
   display: flex;
   justify-content: center;
@@ -29,7 +27,6 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* Form Inputs */
 input[type="text"], select {
   padding: 5px 10px;
   font-size: 1em;
