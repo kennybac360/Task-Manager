@@ -10,10 +10,9 @@ taskForm.addEventListener('submit', function (e) {
   const taskName = document.getElementById('taskName').value.trim();
   const priority = document.getElementById('priority').value;
   const isImportant = document.getElementById('important').checked;
-  
-  // Only get the date part (YYYY-MM-DD format)
+
   const today = new Date();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // months are 0-indexed
+  const month = String(today.getMonth() + 1).padStart(2, '0'); 
   const day = String(today.getDate()).padStart(2, '0');
   const year = today.getFullYear();
   const dateAdded = `${month}-${day}-${year}`;
@@ -48,7 +47,6 @@ function renderTasks() {
     if (task.isImportant) taskDiv.classList.add('important');
     if (task.isCompleted) taskDiv.classList.add('completed');
 
-    // Task Info
     const infoDiv = document.createElement('div');
     infoDiv.classList.add('task-info');
 
@@ -62,10 +60,8 @@ function renderTasks() {
     infoDiv.appendChild(nameSpan);
     infoDiv.appendChild(metaSpan);
 
-    // Actions
     const btnDiv = document.createElement('div');
 
-    // Done Checkbox
     const doneLabel = document.createElement('label');
     const doneCheckbox = document.createElement('input');
     doneCheckbox.type = "checkbox";
@@ -79,7 +75,6 @@ function renderTasks() {
     doneLabel.appendChild(doneCheckbox);
     doneLabel.appendChild(document.createTextNode(task.isCompleted ? " Undo" : " Done"));
 
-    // Delete Button
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = "Delete";
     deleteBtn.addEventListener('click', () => {
