@@ -10,7 +10,10 @@ taskForm.addEventListener('submit', function (e) {
   const taskName = document.getElementById('taskName').value.trim();
   const priority = document.getElementById('priority').value;
   const isImportant = document.getElementById('important').checked;
-  const dateAdded = new Date().toLocaleString();
+  
+  // Only get the date part (YYYY-MM-DD format)
+  const today = new Date();
+  const dateAdded = today.toISOString().split('T')[0];
 
   if (taskName === "") {
     alert("Task name cannot be empty!");
@@ -51,7 +54,7 @@ function renderTasks() {
 
     const metaSpan = document.createElement('span');
     metaSpan.classList.add('task-meta');
-    metaSpan.textContent = `Priority: ${task.priority} | Added: ${task.date}`;
+    metaSpan.textContent = `Priority: ${task.priority} | ${task.date}`;
 
     infoDiv.appendChild(nameSpan);
     infoDiv.appendChild(metaSpan);
