@@ -1,31 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Task Manager</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <h1>Task Manager</h1>
+  <div class="container">
+    <h1>Task Manager</h1>
 
-  <form id="taskform">
-    <input type="text" id="taskname" placeholder="Task Name" required>
-    
-    <select id="priority">
-      <option value="High">High</option>
-      <option value="Medium">Medium</option>
-      <option value="Low">Low</option>
-    </select>
+    <form id="taskForm">
+      <div class="form-row">
+        <input type="text" id="taskName" placeholder="Task Name" required />
 
-    <label>
-      <input type="checkbox" id="important"> Important
-    </label>
+        <select id="priority">
+          <option value="High">High</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="Low">Low</option>
+        </select>
 
-    <button type="submit">Add Task</button>
-  </form>
+        <label>
+          <input type="checkbox" id="important" />
+          Important
+        </label>
 
-  <div id="taskmanager"></div>
+        <button type="submit">Add Task</button>
+      </div>
+    </form>
+
+    <hr />
+
+    <div id="taskmanager"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
