@@ -38,7 +38,6 @@ button {
   cursor: pointer;
 }
 
-/* Task Styles */
 .task {
   display: flex;
   justify-content: space-between;
@@ -53,18 +52,15 @@ button {
   align-items: flex-start;
 }
 
-/* Highlight important tasks */
 .important {
   background-color: #ffdddd;
 }
 
-/* Strikethrough completed tasks */
 .completed {
   text-decoration: line-through;
   opacity: 0.7;
 }
 
-/* Date and Priority Styling */
 .task-meta {
   font-size: 0.9em;
   color: #555;
