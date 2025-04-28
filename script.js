@@ -13,7 +13,10 @@ taskForm.addEventListener('submit', function (e) {
   
   // Only get the date part (YYYY-MM-DD format)
   const today = new Date();
-  const dateAdded = today.toISOString().split('T')[0];
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // months are 0-indexed
+  const day = String(today.getDate()).padStart(2, '0');
+  const year = today.getFullYear();
+  const dateAdded = `${month}-${day}-${year}`;
 
   if (taskName === "") {
     alert("Task name cannot be empty!");
