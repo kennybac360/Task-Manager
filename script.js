@@ -1,102 +1,74 @@
-const taskForm = document.getElementById('taskForm');
-const taskManager = document.getElementById('taskmanager');
-
 let tasks = [];
-let taskId = 0;
+let id = 0;
 
-taskForm.addEventListener('submit', function (e) {
-  e.preventDefault();
+// Function to add task
+function addTask(event) {
+  event.preventDefault();
 
-  const taskName = document.getElementById('taskName').value.trim();
-  const priority = document.getElementById('priority').value;
-  const isImportant = document.getElementById('important').checked;
-  
+  const taskInput = document.getElementById('taskname');
+  const priorityInput = document.getElementById('priority');
+  const importantInput = document.getElementById('important');
+
+  if (taskInput.value.trim() === '') return;
+
   const today = new Date();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // months are 0-indexed
-  const day = String(today.getDate()).padStart(2, '0');
-  const year = today.getFullYear();
-  const dateAdded = `${month}-${day}-${year}`;
-
-  if (taskName === "") {
-    alert("Task name cannot be empty!");
-    return;
-  }
+  const formattedDate = `${today.getMonth() + 1}-${today.getDate()}-${today.getFullYear()}`;
 
   const task = {
-    id: taskId++,
-    name: taskName,
-    priority: priority,
-    isImportant: isImportant,
+    id: id++,
+    name: taskInput.value,
+    priority: priorityInput.value,
+    isImportant: importantInput.checked,
     isCompleted: false,
-    date: dateAdded
+    date: formattedDate
   };
 
   tasks.push(task);
-  logTasks();
-  renderTasks();
-  taskForm.reset();
-});
+  displayTasks();
 
-function renderTasks() {
-  taskManager.innerHTML = "";
+  taskInput.value = '';
+  priorityInput.value = 'High';
+  importantInput.checked = false;
+}
+
+// Function to display tasks
+function displayTasks() {
+  const taskManager = document.getElementById('taskmanager');
+  taskManager.innerHTML = '';
 
   tasks.forEach(task => {
-    const taskDiv = document.createElement('div');
-    taskDiv.classList.add('task');
-
-    if (task.isImportant) taskDiv.classList.add('important');
-    if (task.isCompleted) taskDiv.classList.add('completed');
-
-    // Task Info
-    const infoDiv = document.createElement('div');
-    infoDiv.classList.add('task-info');
-
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = task.name;
-
-    const metaSpan = document.createElement('span');
-    metaSpan.classList.add('task-meta');
-    metaSpan.textContent = `Priority: ${task.priority} | ${task.date}`;
-
-    infoDiv.appendChild(nameSpan);
-    infoDiv.appendChild(metaSpan);
-
-    // Actions
-    const btnDiv = document.createElement('div');
-
-    // Done Checkbox
-    const doneLabel = document.createElement('label');
-    const doneCheckbox = document.createElement('input');
-    doneCheckbox.type = "checkbox";
-    doneCheckbox.checked = task.isCompleted;
-    doneCheckbox.addEventListener('change', () => {
-      task.isCompleted = doneCheckbox.checked;
-      logTasks();
-      renderTasks();
-    });
-
-    doneLabel.appendChild(doneCheckbox);
-    doneLabel.appendChild(document.createTextNode(task.isCompleted ? " Undo" : " Done"));
-
-    // Delete Button
-    const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = "Delete";
-    deleteBtn.addEventListener('click', () => {
-      tasks = tasks.filter(t => t.id !== task.id);
-      logTasks();
-      renderTasks();
-    });
-
-    btnDiv.appendChild(doneLabel);
-    btnDiv.appendChild(deleteBtn);
-
-    taskDiv.appendChild(infoDiv);
-    taskDiv.appendChild(btnDiv);
-
-    taskManager.appendChild(taskDiv);
+    const taskHTML = `
+      <div class="task ${task.isImportant ? 'important' : ''} ${task.isCompleted ? 'completed' : ''}">
+        <span>${task.name}</span>
+        <span>Priority: ${task.priority}</span>
+        <span>${task.date}</span>
+        <div class="actions">
+          <label>
+            <input type="checkbox" onchange="toggleComplete(${task.id})" ${task.isCompleted ? 'checked' : ''}>
+            ${task.isCompleted ? 'Undo' : 'Done'}
+          </label>
+          <button onclick="deleteTask(${task.id})">Delete</button>
+        </div>
+      </div>
+    `;
+    taskManager.innerHTML += taskHTML;
   });
 }
 
-function logTasks() {
-  console.log(JSON.stringify(tasks, null, 2));
+// Function to toggle task completion
+function toggleComplete(taskId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (task) {
+    task.isCompleted = !task.isCompleted;
+    displayTasks();
+  }
 }
+
+// Function to delete task
+function deleteTask(taskId) {
+  tasks = tasks.filter(t => t.id !== taskId);
+  displayTasks();
+}
+
+// Attach event listener
+document.getElementById('taskform').addEventListener('submit', addTask);
